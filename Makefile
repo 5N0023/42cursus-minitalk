@@ -1,6 +1,7 @@
 NAME =	client \
 		server
-
+BONUS = client_bonus \
+		server_bonus
 
 CC_FLAGS = -Wall -Wextra -Werror
 
@@ -17,11 +18,26 @@ server : server.o
 client : client.o
 		cc  client.o -o client
 
+server_bonus.o : server_bonus.c
+		cc  server_bonus.c -c
+client_bonus.o : client_bonus.c
+		cc  client_bonus.c -c
+
+server_bonus : server_bonus.o
+		cc  server_bonus.o -o server_bonus
+
+client_bonus : client_bonus.o
+		cc  client_bonus.o -o client_bonus
+
+
+bonus : $(BONUS)
+
 clean:
 	rm -f server.o client.o
+	rm -f server_bonus.o client_bonus.o
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(BONUS)
 	
 
 re: fclean all

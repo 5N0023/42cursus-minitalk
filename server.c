@@ -3,34 +3,40 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void handler(int sig,siginfo_t *si) 
+
+void unicodehandler(int *unicode,int b)
 {
-    
+	printf("here\n");
+}
+void handler(int sig, siginfo_t *si) 
+{
 	static char c;
-	static int b = 128;
-	if (sig == SIGUSR2)
+	static int b;
+	static int client;
+
+	if(client != si->si_pid || b == 0)
 	{
-		c += b;
+		client = si->si_pid;
+		c = 0;
+		b = 128;
 	}
-	else if(sig == SIGUSR1){}
+	else if (sig == SIGUSR2)
+		c += b;
 	b  = b / 2;
 	if (b == 0)
 	{
 		write(1,&c,1);
 		if(c == 0)
-		{
 			write(1,"\n",1);
-			kill(si->si_pid,SIGUSR2);
-		}
-		b = 128;
-		c = 0;
 	}
 }
-int main()
+int main(void)
 {
-	pid_t pid = getpid();
-	printf("server pid is %d \n",pid);
+	pid_t pid ;
 	struct sigaction sa;
+
+	pid = getpid();
+	printf("server pid is %d \n",pid);
 	sa.sa_handler = (void*)handler;
 	while(1)
 	{

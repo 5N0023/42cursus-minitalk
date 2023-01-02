@@ -3,6 +3,13 @@
 #include<stdlib.h>
 #include <unistd.h>
 
+
+void handler(int sig)
+{
+	if(sig == SIGUSR2)
+		write(1,"message sent successfully",26);
+}
+
 void client(char *msg,int pid)
 {
 	unsigned char	c;
@@ -22,7 +29,7 @@ void client(char *msg,int pid)
 					kill(pid,SIGUSR1);
 				j++;
 				c <<= 1;
-				usleep(100);
+				usleep(200);
 			}
 			j=0;
 			i++;
@@ -37,6 +44,7 @@ int main(int ac,char **arg)
 	if (ac != 3)
 		exit(1);
 	pid = atoi(arg[1]);
+	signal(SIGUSR2,handler);
 	client(arg[2],pid);
 	i = 0;
 	while(i < 8)
