@@ -4,10 +4,8 @@
 #include <unistd.h>
 
 
-void unicodehandler(int *unicode,int b)
-{
-	printf("here\n");
-}
+#include "minitalk.h"
+
 void handler(int sig, siginfo_t *si) 
 {
 	static char c;
@@ -16,6 +14,7 @@ void handler(int sig, siginfo_t *si)
 
 	if(client != si->si_pid || b == 0)
 	{
+		write(1,"\n",1);
 		client = si->si_pid;
 		c = 0;
 		b = 128;
@@ -24,24 +23,24 @@ void handler(int sig, siginfo_t *si)
 		c += b;
 	b  = b / 2;
 	if (b == 0)
-	{
 		write(1,&c,1);
-		if(c == 0)
-			write(1,"\n",1);
-	}
+
 }
-int main(void)
+
+int	main(void)
 {
-	pid_t pid ;
+	int	pid;
 	struct sigaction sa;
 
-	pid = getpid();
-	printf("server pid is %d \n",pid);
 	sa.sa_handler = (void*)handler;
-	while(1)
+	pid = getpid();
+	write(1,"server pid :",13);
+	ft_putnbr(pid);
+	while (1)
 	{
-		sigaction(SIGUSR1,&sa,NULL);
-		sigaction(SIGUSR2,&sa,NULL);
-		pause();
+		sigaction(SIGUSR1, &sa, NULL);
+		sigaction(SIGUSR2, &sa, NULL);
+		pause ();
 	}
+	return (0);
 }

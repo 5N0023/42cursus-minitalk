@@ -13,10 +13,10 @@ client.o : client.c
 		cc  client.c -c
 
 server : server.o
-		cc  server.o -o server
+		cc  server.o helpers.c -o server
 
-client : client.o
-		cc  client.o -o client
+client : client.o helpers.c
+		cc  client.o helpers.c -o client
 
 server_bonus.o : server_bonus.c
 		cc  server_bonus.c -c
