@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helpers.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlektaib <mlektaib@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/17 16:16:54 by mlektaib          #+#    #+#             */
+/*   Updated: 2023/01/17 16:51:01 by mlektaib         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minitalk.h"
 
 int	ft_atoi(const char *str)
@@ -8,7 +20,7 @@ int	ft_atoi(const char *str)
 
 	sign = 1;
 	res = 0;
-	while (( *str >=9 && *str <= 13) || *str == ' ')
+	while ((*str >= 9 && *str <= 13) || *str == ' ')
 		str++;
 	if (*str == '-' || *str == '+')
 	{
@@ -32,7 +44,7 @@ int	ft_atoi(const char *str)
 void	ft_putnbr(int n)
 {
 	long	ln;
-    char    nm;
+	char	nm;
 
 	ln = n;
 	if (ln < 0)
@@ -41,10 +53,10 @@ void	ft_putnbr(int n)
 		ln *= -1;
 	}
 	if (ln <= 9)
-    {
-        nm = ln + '0';
-		write(1,&nm,1);
-    }
+	{
+		nm = ln + '0';
+		write(1, &nm, 1);
+	}
 	else
 	{
 		ft_putnbr(ln / 10);

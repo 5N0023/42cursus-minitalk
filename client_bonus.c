@@ -1,53 +1,62 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlektaib <mlektaib@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/17 16:16:44 by mlektaib          #+#    #+#             */
+/*   Updated: 2023/01/17 16:51:37 by mlektaib         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "minitalk.h"
 
-void handler(int sig)
+void	handler(int sig)
 {
-	if(sig == SIGUSR2)
-		write(1,"message sent successfully",26);
+	if (sig == SIGUSR2)
+		write(1, "message sent successfully", 26);
 }
 
-void client(char *msg,int pid)
+void	client(char c, int pid)
 {
-	unsigned char	c;
 	int				i;
-	int				j;
 
 	i = 0;
-	j = 0;
-	while(msg[i])
-		{
-			c = msg[i];
-			while(j < 8)
-			{
-				if (c & 128)
-					kill(pid,SIGUSR2);
-				else 
-					kill(pid,SIGUSR1);
-				j++;
-				c <<= 1;
-				usleep(200);
-			}
-			j=0;
-			i++;
-		}
+	while (i < 8)
+	{
+		if (c & 128)
+			kill(pid, SIGUSR2);
+		else
+			kill(pid, SIGUSR1);
+		i++;
+		c <<= 1;
+		usleep(200);
+	}
 }
 
-int main(int ac,char **arg)
+int	main(int argc, char **argv)
 {
-	int pid;
-	int i;
+	int	pid;
+	int	i;
 
-	if (ac != 3)
-		exit(1);
-	pid = atoi(arg[1]);
-	signal(SIGUSR2,handler);
-	client(arg[2],pid);
 	i = 0;
-	while(i < 8)
+	signal(SIGUSR2, handler);
+	if (argc == 3)
+	{
+		pid = ft_atoi(argv[1]);
+		while (argv[2][i] != '\0')
 		{
-			kill(pid,SIGUSR1);
-			usleep(200);
+			client(argv[2][i], pid);
 			i++;
 		}
+		client('\0', pid);
+		pause();
+	}
+	else
+	{
+		write(2, "Error: wrong format.\n", 22);
+		return (1);
+	}
 	return (0);
 }
