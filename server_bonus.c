@@ -6,7 +6,7 @@
 /*   By: mlektaib <mlektaib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 16:17:26 by mlektaib          #+#    #+#             */
-/*   Updated: 2023/01/17 22:49:41 by mlektaib         ###   ########.fr       */
+/*   Updated: 2023/01/18 14:02:32 by mlektaib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,24 @@ void	resetall(int *client, int pid, unsigned char *c, int *b)
 	*b = 128;
 }
 
+void	ft_begofuni(unsigned char *tab, int *start, unsigned char c)
+{
+	int	i;
+
+	i = 0;
+	tab[0] = c;
+	while (i < 4)
+	{
+		if (c & 128)
+			*start += 1;
+		i++;
+		c <<= 1;
+	}
+}
+
 void	ft_handleunicode(unsigned char c, int pid)
 {
 	static int				start;
-	int						i;
 	static unsigned char	tab[4];
 	static int				bytes;
 	static int				oldpid;
@@ -36,18 +50,10 @@ void	ft_handleunicode(unsigned char c, int pid)
 		oldpid = pid;
 		start = 0;
 	}
-	i = 0;
-	if (start == 0)
+	if (start == 0 || pid != oldpid)
 	{
 		bytes = 0;
-		tab[bytes] = c;
-		while (i < 4)
-		{
-			if (c & 128)
-				start++;
-			i++;
-			c <<= 1;
-		}
+		ft_begofuni(tab, &start, c);
 	}
 	else if (start > 1)
 		tab[bytes] = c;
